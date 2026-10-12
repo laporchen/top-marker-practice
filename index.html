@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<!-- Based on wrthomps/top-marker-practice (MIT License, (c) 2023 Woody Thompson). Hotbars and original icons added. -->
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TOP Marker Practice</title><style>/*switch styles*/
+
+div.btn-container {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+div.btn-container i {
+    display: inline-block;
+    position: relative;
+    top: -9px;
+}
+
+label {
+    font-family: "Tahoma", serif;
+    font-size: 14px;
+    color: #ebebeb;
+    font-weight: bold;
+}
+
+.btn-color-mode-switch {
+    display: inline-block;
+    margin: 0px;
+    position: relative;
+}
+
+.btn-color-mode-switch > label.btn-color-mode-switch-inner {
+    margin: 0px;
+    width: 180px;
+    height: 30px;
+    background: rgb(97, 97, 97, 3);
+    /* background: linear-gradient(90deg, rgba(34,34,34,1) 0%, rgba(57,57,57,1) 43%, rgba(97,97,97,1) 100%); */
+    border-radius: 26px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease;
+    /*box-shadow: 0px 0px 8px 0px rgba(17, 17, 17, 0.34) inset;*/
+    display: block;
+}
+
+.btn-color-mode-switch > label.btn-color-mode-switch-inner:before {
+    content: attr(data-on);
+    position: absolute;
+    font-size: 14px;
+    font-weight: bold;
+    top: 7px;
+    right: 20px;
+
+}
+
+.btn-color-mode-switch > label.btn-color-mode-switch-inner:after {
+    content: attr(data-off);
+    width: 90px;
+    height: 16px;
+    background: rgb(0,0,0);
+    background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(23,23,23,1) 43%, rgba(34,34,34,1) 100%); 
+    border-radius: 26px;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0px 0px 6px -2px #111;
+    padding: 5px 0px;
+}
+
+.btn-color-mode-switch > .alert {
+    display: none;
+    background: #FF9800;
+    border: none;
+    color: #fff;
+}
+
+.btn-color-mode-switch input[type="checkbox"] {
+    cursor: pointer;
+    width: 178px;
+    height: 28px;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 1;
+    z-index: 1;
+    margin: 0px;
+}
+.btn-color-mode-switch input[type="checkbox"]:checked + label.btn-color-mode-switch-inner:after {
+    content: attr(data-on);
+    left: 88px;
+}
+
+.btn-color-mode-switch input[type="checkbox"]:checked + label.btn-color-mode-switch-inner:before {
+    content: attr(data-off);
+    right: auto;
+    left: 20px;
+}
+
+.btn-color-mode-switch input[type="checkbox"]:checked ~ .alert {
+    display: block;
+}.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 300px;
+  background-color: #eee;
+  color: #222;
+  border-style: solid;
+  border-color: #222;
+  text-align: justify;
+  border-radius: 6px;
+  position: absolute;
+  padding: 5px 5px;
+  z-index: 1;
+  top: -5px;
+  left: 110%;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 10%;
+  right: 100%;
+  margin-top: -5px;
+  /*border-width: 5px;
+  border-style: solid;
+  border-color: transparent #eee transparent transparent;*/
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+:root{--bg:#f6f7fb;--ink:#22232a;--muted:#5d6170;--panel:#ffffff;--line:#d9dce5;--accent:#3e68ff;--accent-press:#2d57ee;
+ --bar:#2b2a33;--bar-edge:#8c7a4e;--slot-hi:#e8cf86;--filler:#d4d7df;--filler-ink:#3d404a;--row-hover:rgba(62,104,255,.08);
+ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17181d;--ink:#eceef3;--muted:#a3a7b3;--panel:#212229;--line:#363844;--filler:#3a3c46;--filler-ink:#d5d8e0;--row-hover:rgba(120,150,255,.12)}}
+:root[data-theme="dark"]{--bg:#17181d;--ink:#eceef3;--muted:#a3a7b3;--panel:#212229;--line:#363844;--filler:#3a3c46;--filler-ink:#d5d8e0;--row-hover:rgba(120,150,255,.12)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Meiryo UI","Segoe UI",Tahoma,sans-serif}
+.layout{display:grid;grid-template-columns:minmax(160px,240px) minmax(0,680px) minmax(0,500px);gap:24px;padding:28px;align-items:start}
+.results{font-size:3.5rem;font-weight:bold;font-family:Tahoma,sans-serif;text-align:right;padding-top:74px;font-variant-numeric:tabular-nums}
+.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+button.button{border:none;font:inherit;font-size:1rem;cursor:pointer;background:var(--accent);color:#fff;border-radius:8px;box-shadow:0 3px 5px rgba(0,0,0,.18);padding:.4em .75em;min-height:40px;transition:background-color 160ms ease}
+button.button:hover,button.button:active{background:var(--accent-press)}
+button:focus-visible{outline:3px solid var(--slot-hi);outline-offset:2px}
+
+/* Board: col 1 = attack hotbar, col 2 = stop hotbar, col 3 = party. Same grid rows, so every slot lines up with its player. */
+.board{display:grid;grid-template-columns:60px 60px minmax(0,1fr);grid-template-rows:auto repeat(8,60px);column-gap:6px;row-gap:6px;position:relative}
+.bar_bg{grid-row:2/span 8;background:var(--bar);border:1px solid #55505e;border-radius:10px;margin:-6px 0;box-shadow:0 3px 6px rgba(0,0,0,.25)}
+.bar_bg.a{grid-column:1}.bar_bg.s{grid-column:2}
+.bar_label{grid-row:1;font-size:13px;text-align:center;color:var(--muted);padding-bottom:8px}
+.slot{position:relative;z-index:1;justify-self:center;align-self:center;width:50px;height:50px;padding:0;border-radius:8px;cursor:pointer;
+ background:radial-gradient(circle at 50% 35%,#4a4752 0%,#1d1c22 75%);border:2px solid var(--bar-edge);box-shadow:inset 0 0 6px rgba(0,0,0,.7);transition:transform 90ms ease,border-color 120ms ease}
+.slot:hover{border-color:var(--slot-hi)}
+.slot:active{transform:scale(.9)}
+.slot .glyph{position:absolute;inset:5px;background-size:contain;background-repeat:no-repeat;background-position:center}
+.slot.has{border-color:#7fa0ff;box-shadow:0 0 0 2px #7fa0ff,inset 0 0 6px rgba(0,0,0,.7)}
+.slot.empty .glyph{opacity:.3}
+.party{grid-column:3;display:flex;align-items:center;gap:8px;padding:0 8px;border-radius:8px;min-width:0}
+.party:hover{background:var(--row-hover)}
+.icon_container{position:relative;flex:0 0 48px;height:48px}
+.job{position:absolute;inset:0;border-radius:10px;display:grid;place-items:center;font-weight:700;font-size:13px;color:#fff;letter-spacing:.5px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.2)}
+.job.tank{background:#2f5fb3}.job.healer{background:#2f8f4e}.job.dps{background:#b33a3a}
+.mark{position:absolute;inset:-4px;z-index:2;background-size:contain;background-repeat:no-repeat}
+.name{flex:1 1 auto;min-width:0;font-size:1.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.debuff{flex:0 0 34px;height:40px;border-radius:6px;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--filler);color:var(--filler-ink)}
+.options{display:grid;grid-template-columns:min-content auto;grid-auto-rows:minmax(45px,auto);align-items:center;padding-top:60px}
+.btn-container{margin:6px 10px 6px 0}
+.rule_label{font-size:1.25rem}
+.tooltip .tooltiptext{background:var(--panel);color:var(--ink);border:2px solid var(--line)}
+.hotkey{grid-column:1/3;font-size:1rem;line-height:1.55;max-width:62ch}
+.hotkey .key{display:inline-block;width:22px;height:22px;vertical-align:-5px;background-size:contain;margin:0 3px}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.tile{border-radius:6px;display:grid;place-items:center;font-size:11px;font-weight:700;} .legend .tile{width:auto;padding:0 6px;flex:0 0 auto;height:26px}
+@media (max-width:1180px){.layout{grid-template-columns:1fr;max-width:680px;margin:0 auto;padding:16px}
+ .results{grid-row:1;text-align:left;padding-top:0;font-size:2.5rem}.options{padding-top:0}}
+@media (max-width:560px){.board{grid-template-columns:50px 50px minmax(0,1fr);grid-template-rows:auto repeat(8,54px);column-gap:4px}
+ .slot{width:44px;height:44px}.name{font-size:.95rem}.debuff{flex-basis:26px;height:32px;font-size:9px}.icon_container{flex-basis:40px;height:40px}
+ .party{gap:4px;padding:0 4px}.controls{gap:6px}button.button{font-size:.85rem}}
+.attack1{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMjgiIGZpbGw9IiNkMjNhMmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+PGcgc3Ryb2tlPSIjZmZkOWQzIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTMyIDR2OU0zMiA1MXY5TTQgMzJoOU01MSAzMmg5Ii8+PC9nPjxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjE3IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmQ5ZDMiIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjMyIiB5PSI0MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iNzAwIiBmb250LXNpemU9IjI4IiBmaWxsPSIjZmZmIj4xPC90ZXh0Pjwvc3ZnPg==")}
+.attack2{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMjgiIGZpbGw9IiNkMjNhMmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+PGcgc3Ryb2tlPSIjZmZkOWQzIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTMyIDR2OU0zMiA1MXY5TTQgMzJoOU01MSAzMmg5Ii8+PC9nPjxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjE3IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmQ5ZDMiIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjMyIiB5PSI0MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iNzAwIiBmb250LXNpemU9IjI4IiBmaWxsPSIjZmZmIj4yPC90ZXh0Pjwvc3ZnPg==")}
+.attack3{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMjgiIGZpbGw9IiNkMjNhMmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+PGcgc3Ryb2tlPSIjZmZkOWQzIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTMyIDR2OU0zMiA1MXY5TTQgMzJoOU01MSAzMmg5Ii8+PC9nPjxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjE3IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmQ5ZDMiIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjMyIiB5PSI0MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iNzAwIiBmb250LXNpemU9IjI4IiBmaWxsPSIjZmZmIj4zPC90ZXh0Pjwvc3ZnPg==")}
+.attack4{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMjgiIGZpbGw9IiNkMjNhMmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+PGcgc3Ryb2tlPSIjZmZkOWQzIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTMyIDR2OU0zMiA1MXY5TTQgMzJoOU01MSAzMmg5Ii8+PC9nPjxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjE3IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmQ5ZDMiIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjMyIiB5PSI0MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iNzAwIiBmb250LXNpemU9IjI4IiBmaWxsPSIjZmZmIj40PC90ZXh0Pjwvc3ZnPg==")}
+.attack5{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMjgiIGZpbGw9IiNkMjNhMmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+PGcgc3Ryb2tlPSIjZmZkOWQzIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTMyIDR2OU0zMiA1MXY5TTQgMzJoOU01MSAzMmg5Ii8+PC9nPjxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjE3IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmQ5ZDMiIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjMyIiB5PSI0MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iNzAwIiBmb250LXNpemU9IjI4IiBmaWxsPSIjZmZmIj41PC90ZXh0Pjwvc3ZnPg==")}
+.bind1{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBvbHlnb24gcG9pbnRzPSIyMSw0IDQzLDQgNjAsMjEgNjAsNDMgNDMsNjAgMjEsNjAgNCw0MyA0LDIxIiBmaWxsPSIjNGIzY2M5IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMyIvPjxwb2x5Z29uIHBvaW50cz0iMjQsMTEgNDAsMTEgNTMsMjQgNTMsNDAgNDAsNTMgMjQsNTMgMTEsNDAgMTEsMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Q2ZDBmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMzIiIHk9IjQyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI3MDAiIGZvbnQtc2l6ZT0iMjgiIGZpbGw9IiNmZmYiPjE8L3RleHQ+PC9zdmc+")}
+.bind2{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBvbHlnb24gcG9pbnRzPSIyMSw0IDQzLDQgNjAsMjEgNjAsNDMgNDMsNjAgMjEsNjAgNCw0MyA0LDIxIiBmaWxsPSIjNGIzY2M5IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMyIvPjxwb2x5Z29uIHBvaW50cz0iMjQsMTEgNDAsMTEgNTMsMjQgNTMsNDAgNDAsNTMgMjQsNTMgMTEsNDAgMTEsMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Q2ZDBmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMzIiIHk9IjQyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI3MDAiIGZvbnQtc2l6ZT0iMjgiIGZpbGw9IiNmZmYiPjI8L3RleHQ+PC9zdmc+")}
+.bind3{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBvbHlnb24gcG9pbnRzPSIyMSw0IDQzLDQgNjAsMjEgNjAsNDMgNDMsNjAgMjEsNjAgNCw0MyA0LDIxIiBmaWxsPSIjNGIzY2M5IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMyIvPjxwb2x5Z29uIHBvaW50cz0iMjQsMTEgNDAsMTEgNTMsMjQgNTMsNDAgNDAsNTMgMjQsNTMgMTEsNDAgMTEsMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Q2ZDBmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMzIiIHk9IjQyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI3MDAiIGZvbnQtc2l6ZT0iMjgiIGZpbGw9IiNmZmYiPjM8L3RleHQ+PC9zdmc+")}
+:is(.debuff,.tile).dyn1{background:#7b3fc4;color:#fff;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)} :is(.debuff,.tile).dyn1::after{content:"Ω1"}
+:is(.debuff,.tile).dyn2{background:#7b3fc4;color:#fff;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)} :is(.debuff,.tile).dyn2::after{content:"Ω2"}
+:is(.debuff,.tile).dyn3{background:#7b3fc4;color:#fff;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)} :is(.debuff,.tile).dyn3::after{content:"Ω3"}
+:is(.debuff,.tile).near{background:#e07b1f;color:#fff;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)} :is(.debuff,.tile).near::after{content:"Near"}
+:is(.debuff,.tile).distant{background:#1f7fd1;color:#fff;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)} :is(.debuff,.tile).distant::after{content:"Far"}
+:is(.debuff,.tile).first{background:#c9a227;color:#fff;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)} :is(.debuff,.tile).first::after{content:"1st"}
+:is(.debuff,.tile).second{background:#8a8f99;color:#fff;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)} :is(.debuff,.tile).second::after{content:"2nd"}
+:is(.debuff,.tile).mid{background:#2e9c6a;color:#fff;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)} :is(.debuff,.tile).mid::after{content:"Mid"}
+:is(.debuff,.tile).remote{background:#2e9c6a;color:#fff;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)} :is(.debuff,.tile).remote::after{content:"Rem"}
+.debuff.missionary::after{content:"Mis"}
+.debuff.eprog::after{content:"Kra"}
+.debuff.holos::after{content:"Hol"}
+.debuff.panhaima::after{content:"Pan"}
+.debuff.asylum::after{content:"Asy"}
+.debuff.brother::after{content:"Bro"}
+.debuff.bvoice::after{content:"BV"}
+.debuff.mballad::after{content:"MB"}
+.debuff.mbarrier::after{content:"MBa"}
+.debuff.medicated::after{content:"Pot"}
+.debuff.sprint::after{content:"Spr"}
+.debuff.length::after{content:"AL"}
+.debuff.rampart::after{content:"Ram"}
+.debuff.bloodbath::after{content:"BB"}
+.debuff.lucid::after{content:"Luc"}
+.debuff.swift::after{content:"Sw"}
+.debuff.ridfire::after{content:"RoF"}
+.debuff.leaden::after{content:"Lea"}
+.debuff.blast::after{content:"Bla"}
+.debuff.straight::after{content:"SS"}
+.debuff.raging::after{content:"RS"}
+.debuff.temp::after{content:"Tem"}
+.debuff.thin::after{content:"TA"}
+.debuff.presence::after{content:"PoM"}
+.debuff.suiton::after{content:"Sui"}
+.debuff.kassatsu::after{content:"Kas"}
+.debuff.tcj::after{content:"TCJ"}
+.debuff.eukrasia::after{content:"Euk"}
+.debuff.zoe::after{content:"Zoe"}
+.debuff.living::after{content:"LD"}
+.debuff.tbn::after{content:"TBN"}
+.debuff.oblation::after{content:"Obl"}
+.debuff.accel::after{content:"Acc"}
+.debuff.verfire::after{content:"VF"}
+.debuff.verstone::after{content:"VS"}
+.debuff.manafic::after{content:"Man"}
+.debuff.bolide::after{content:"Bol"}
+.debuff.shell::after{content:"HoC"}
+.debuff.nomercy::after{content:"NM"}
+.remote :is(.debuff,.tile).near{background:url("https://xivapi.com/i/015000/015141_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).near::after{content:none}
+.remote :is(.debuff,.tile).distant{background:url("https://xivapi.com/i/015000/015142_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).distant::after{content:none}
+.remote :is(.debuff,.tile).first{background:url("https://xivapi.com/i/015000/015401_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).first::after{content:none}
+.remote :is(.debuff,.tile).second{background:url("https://xivapi.com/i/015000/015402_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).second::after{content:none}
+.remote :is(.debuff,.tile).dyn1{background:url("https://v2.xivapi.com/api/asset?path=ui/icon/219000/219657_hr1.tex&format=png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).dyn1::after{content:none}
+.remote :is(.debuff,.tile).dyn2{background:url("https://v2.xivapi.com/api/asset?path=ui/icon/219000/219658_hr1.tex&format=png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).dyn2::after{content:none}
+.remote :is(.debuff,.tile).dyn3{background:url("https://v2.xivapi.com/api/asset?path=ui/icon/219000/219659_hr1.tex&format=png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).dyn3::after{content:none}
+.remote :is(.debuff,.tile).mid{background:url("https://xivapi.com/i/015000/015129_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).mid::after{content:none}
+.remote :is(.debuff,.tile).remote{background:url("https://xivapi.com/i/015000/015130_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).remote::after{content:none}
+.remote :is(.debuff,.tile).missionary{background:url("https://xivapi.com/i/013000/013122_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).missionary::after{content:none}
+.remote :is(.debuff,.tile).eprog{background:url("https://xivapi.com/i/012000/012954_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).eprog::after{content:none}
+.remote :is(.debuff,.tile).holos{background:url("https://xivapi.com/i/012000/012971_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).holos::after{content:none}
+.remote :is(.debuff,.tile).panhaima{background:url("https://xivapi.com/i/012000/012959_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).panhaima::after{content:none}
+.remote :is(.debuff,.tile).asylum{background:url("https://xivapi.com/i/012000/012629_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).asylum::after{content:none}
+.remote :is(.debuff,.tile).brother{background:url("https://xivapi.com/i/012000/012532_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).brother::after{content:none}
+.remote :is(.debuff,.tile).bvoice{background:url("https://xivapi.com/i/012000/012601_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).bvoice::after{content:none}
+.remote :is(.debuff,.tile).mballad{background:url("https://xivapi.com/i/012000/012603_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).mballad::after{content:none}
+.remote :is(.debuff,.tile).mbarrier{background:url("https://xivapi.com/i/013000/013408_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).mbarrier::after{content:none}
+.remote :is(.debuff,.tile).medicated{background:url("https://xivapi.com/i/016000/016203_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).medicated::after{content:none}
+.remote :is(.debuff,.tile).sprint{background:url("https://xivapi.com/i/010000/010101_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).sprint::after{content:none}
+.remote :is(.debuff,.tile).length{background:url("https://xivapi.com/i/013000/013915_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).length::after{content:none}
+.remote :is(.debuff,.tile).rampart{background:url("https://xivapi.com/i/013000/013911_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).rampart::after{content:none}
+.remote :is(.debuff,.tile).bloodbath{background:url("https://xivapi.com/i/013000/013913_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).bloodbath::after{content:none}
+.remote :is(.debuff,.tile).lucid{background:url("https://xivapi.com/i/013000/013909_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).lucid::after{content:none}
+.remote :is(.debuff,.tile).swift{background:url("https://xivapi.com/i/010000/010454_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).swift::after{content:none}
+.remote :is(.debuff,.tile).ridfire{background:url("https://xivapi.com/i/012000/012528_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).ridfire::after{content:none}
+.remote :is(.debuff,.tile).leaden{background:url("https://xivapi.com/i/012000/012533_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).leaden::after{content:none}
+.remote :is(.debuff,.tile).blast{background:url("https://xivapi.com/i/012000/012621_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).blast::after{content:none}
+.remote :is(.debuff,.tile).straight{background:url("https://xivapi.com/i/010000/010365_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).straight::after{content:none}
+.remote :is(.debuff,.tile).raging{background:url("https://xivapi.com/i/010000/010354_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).raging::after{content:none}
+.remote :is(.debuff,.tile).temp{background:url("https://xivapi.com/i/012000/012633_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).temp::after{content:none}
+.remote :is(.debuff,.tile).thin{background:url("https://xivapi.com/i/012000/012631_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).thin::after{content:none}
+.remote :is(.debuff,.tile).presence{background:url("https://xivapi.com/i/012000/012627_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).presence::after{content:none}
+.remote :is(.debuff,.tile).suiton{background:url("https://xivapi.com/i/012000/012906_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).suiton::after{content:none}
+.remote :is(.debuff,.tile).kassatsu{background:url("https://xivapi.com/i/012000/012902_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).kassatsu::after{content:none}
+.remote :is(.debuff,.tile).tcj{background:url("https://xivapi.com/i/012000/012911_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).tcj::after{content:none}
+.remote :is(.debuff,.tile).eukrasia{background:url("https://xivapi.com/i/012000/012953_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).eukrasia::after{content:none}
+.remote :is(.debuff,.tile).zoe{background:url("https://xivapi.com/i/012000/012957_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).zoe::after{content:none}
+.remote :is(.debuff,.tile).living{background:url("https://xivapi.com/i/013000/013115_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).living::after{content:none}
+.remote :is(.debuff,.tile).tbn{background:url("https://xivapi.com/i/013000/013118_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).tbn::after{content:none}
+.remote :is(.debuff,.tile).oblation{background:url("https://xivapi.com/i/013000/013123_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).oblation::after{content:none}
+.remote :is(.debuff,.tile).accel{background:url("https://xivapi.com/i/013000/013405_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).accel::after{content:none}
+.remote :is(.debuff,.tile).verfire{background:url("https://xivapi.com/i/013000/013402_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).verfire::after{content:none}
+.remote :is(.debuff,.tile).verstone{background:url("https://xivapi.com/i/013000/013403_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).verstone::after{content:none}
+.remote :is(.debuff,.tile).manafic{background:url("https://xivapi.com/i/013000/013407_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).manafic::after{content:none}
+.remote :is(.debuff,.tile).bolide{background:url("https://xivapi.com/i/013000/013606_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).bolide::after{content:none}
+.remote :is(.debuff,.tile).shell{background:url("https://xivapi.com/i/013000/013602_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).shell::after{content:none}
+.remote :is(.debuff,.tile).nomercy{background:url("https://xivapi.com/i/013000/013601_hr1.png") center/contain no-repeat;box-shadow:none} .remote :is(.debuff,.tile).nomercy::after{content:none}
+.remote .attack1{background-image:url("https://xivapi.com/i/061000/061201_hr1.png")}
+.remote .attack2{background-image:url("https://xivapi.com/i/061000/061202_hr1.png")}
+.remote .attack3{background-image:url("https://xivapi.com/i/061000/061203_hr1.png")}
+.remote .attack4{background-image:url("https://xivapi.com/i/061000/061204_hr1.png")}
+.remote .attack5{background-image:url("https://xivapi.com/i/061000/061205_hr1.png")}
+.remote .bind1{background-image:url("https://xivapi.com/i/061000/061211_hr1.png")}
+.remote .bind2{background-image:url("https://xivapi.com/i/061000/061212_hr1.png")}
+.remote .bind3{background-image:url("https://xivapi.com/i/061000/061213_hr1.png")}
+.job img{display:none;position:absolute;inset:-6px;width:calc(100% + 12px);height:calc(100% + 12px);object-fit:contain} .remote .job img{display:block} .remote .job{background:transparent;box-shadow:none;color:transparent}
+.remote .legend .tile{width:30px;height:38px}
+</style></head>
+<body><div class="layout">
+<div class="results" id="results">0.000s</div>
+<main>
+<div class="controls"><button class="button" id="sigma">Start Sigma</button><button class="button" id="omega1">Start Omega 1</button><button class="button" id="omega2">Start Omega 2</button></div>
+<div class="board">
+<div class="bar_label" style="grid-column:1">Attack</div><div class="bar_label" style="grid-column:2">Stop</div>
+<div class="bar_bg a"></div><div class="bar_bg s"></div>
+<button class="slot atk" data-p="1" style="grid-column:1;grid-row:2" aria-label="Mark Demanding Drk attack"><span class="glyph attack1"></span></button>
+<button class="slot stp" data-p="1" style="grid-column:2;grid-row:2" aria-label="Mark Demanding Drk stop"><span class="glyph bind1"></span></button>
+<div class="party drk" id="party1" style="grid-row:2"><div class="icon_container"><div class="job tank">DRK<img src="https://xivapi.com/cj/companion/darkknight.png" alt=""></div></div><div class="name">Demanding Drk</div></div>
+<button class="slot atk" data-p="2" style="grid-column:1;grid-row:3" aria-label="Mark Gallant Gnb attack"><span class="glyph attack1"></span></button>
+<button class="slot stp" data-p="2" style="grid-column:2;grid-row:3" aria-label="Mark Gallant Gnb stop"><span class="glyph bind1"></span></button>
+<div class="party gnb" id="party2" style="grid-row:3"><div class="icon_container"><div class="job tank">GNB<img src="https://xivapi.com/cj/companion/gunbreaker.png" alt=""></div></div><div class="name">Gallant Gnb</div></div>
+<button class="slot atk" data-p="3" style="grid-column:1;grid-row:4" aria-label="Mark Whimsical Whm attack"><span class="glyph attack1"></span></button>
+<button class="slot stp" data-p="3" style="grid-column:2;grid-row:4" aria-label="Mark Whimsical Whm stop"><span class="glyph bind1"></span></button>
+<div class="party whm" id="party3" style="grid-row:4"><div class="icon_container"><div class="job healer">WHM<img src="https://xivapi.com/cj/companion/whitemage.png" alt=""></div></div><div class="name">Whimsical Whm</div></div>
+<button class="slot atk" data-p="4" style="grid-column:1;grid-row:5" aria-label="Mark Sonorous Sge attack"><span class="glyph attack1"></span></button>
+<button class="slot stp" data-p="4" style="grid-column:2;grid-row:5" aria-label="Mark Sonorous Sge stop"><span class="glyph bind1"></span></button>
+<div class="party sge" id="party4" style="grid-row:5"><div class="icon_container"><div class="job healer">SGE<img src="https://xivapi.com/cj/companion/sage.png" alt=""></div></div><div class="name">Sonorous Sge</div></div>
+<button class="slot atk" data-p="5" style="grid-column:1;grid-row:6" aria-label="Mark Neurotic Nin attack"><span class="glyph attack1"></span></button>
+<button class="slot stp" data-p="5" style="grid-column:2;grid-row:6" aria-label="Mark Neurotic Nin stop"><span class="glyph bind1"></span></button>
+<div class="party nin" id="party5" style="grid-row:6"><div class="icon_container"><div class="job dps">NIN<img src="https://xivapi.com/cj/companion/ninja.png" alt=""></div></div><div class="name">Neurotic Nin</div></div>
+<button class="slot atk" data-p="6" style="grid-column:1;grid-row:7" aria-label="Mark Maladroit Mnk attack"><span class="glyph attack1"></span></button>
+<button class="slot stp" data-p="6" style="grid-column:2;grid-row:7" aria-label="Mark Maladroit Mnk stop"><span class="glyph bind1"></span></button>
+<div class="party mnk" id="party6" style="grid-row:7"><div class="icon_container"><div class="job dps">MNK<img src="https://xivapi.com/cj/companion/monk.png" alt=""></div></div><div class="name">Maladroit Mnk</div></div>
+<button class="slot atk" data-p="7" style="grid-column:1;grid-row:8" aria-label="Mark Baleful Brd attack"><span class="glyph attack1"></span></button>
+<button class="slot stp" data-p="7" style="grid-column:2;grid-row:8" aria-label="Mark Baleful Brd stop"><span class="glyph bind1"></span></button>
+<div class="party brd" id="party7" style="grid-row:8"><div class="icon_container"><div class="job dps">BRD<img src="https://xivapi.com/cj/companion/bard.png" alt=""></div></div><div class="name">Baleful Brd</div></div>
+<button class="slot atk" data-p="8" style="grid-column:1;grid-row:9" aria-label="Mark Rustic Rdm attack"><span class="glyph attack1"></span></button>
+<button class="slot stp" data-p="8" style="grid-column:2;grid-row:9" aria-label="Mark Rustic Rdm stop"><span class="glyph bind1"></span></button>
+<div class="party rdm" id="party8" style="grid-row:9"><div class="icon_container"><div class="job dps">RDM<img src="https://xivapi.com/cj/companion/redmage.png" alt=""></div></div><div class="name">Rustic Rdm</div></div>
+</div></main>
+<div class="options">
+<div class="btn-container">
+                    
+                    <label class="switch btn-color-mode-switch tooltip">
+                        <span class="tooltiptext">
+                            <p><strong>Simple:</strong> Mark-to-attack three players with one Dynamis stack and no Hello, World
+                                debuff.
+                                These players will go to Omega-F.</p>
+                            <p><strong>Complex:</strong> Mark-to-bind two players with one Dynamis stack and no Hello, World debuff.
+                                These players will bait fists.
+                                Also mark-to-attack the remaining four players without a Hello, World debuff. These players will
+                                bait
+                                Hello, World.</p>
+                        </span>
+                        <input type="checkbox" name="color_mode" id="sigma_rules" value="1" checked>
+                        <label for="color_mode" data-on="Complex" data-off="Simple" class="btn-color-mode-switch-inner"></label>
+                    </label>
+                    
+                </div>
+                <div class="rule_label">
+                    Sigma rules
+                </div>
+                <div class="btn-container">
+                    
+                    <label class="switch btn-color-mode-switch tooltip">
+                        <span class="tooltiptext">
+                            <p><strong>Simple:</strong> Mark-to-bind two players with two Dynamis stacks and no First-in-Line
+                                debuff. Players with two stacks and Second-in-Line must be marked bind. These players will bait
+                                monitors.
+                                Also mark-to-attack two remaining players without First-in-Line. These players will bait Distant World.
+                            </p>
+                            <p><strong>Complex:</strong> Mark-to-bind two players with two Dynamis stacks and no First-in-Line
+                                debuff. Players with two stacks and Second-in-Line must be marked bind. These players will bait
+                                monitors.
+                                Also mark-to-attack the remaining four players without First-in-Line. These players will
+                                bait Hello, World.</p>
+                        </span>
+                        <input type="checkbox" name="color_mode" id="omega1_rules" value="1" checked>
+                        <label for="color_mode" data-on="Complex" data-off="Simple" class="btn-color-mode-switch-inner"></label>
+                    </label>
+                    
+                </div>
+                <div class="rule_label">
+                    Omega 1 rules
+                </div>
+                <div class="btn-container">
+                    
+                    <label class="switch btn-color-mode-switch tooltip">
+                        <span class="tooltiptext">
+                            <p><strong>Simple:</strong> Mark-to-bind two players with three Dynamis stacks. These players will
+                                handle tethers.
+                                Also mark-to-attack two of the remaining players without Second-in-Line. These players will
+                                bait Distant World.</p>
+                            <p><strong>Complex:</strong> Mark-to-bind two players with three Dynamis stacks. These players will
+                                handle tethers.
+                                Also mark-to-attack the remaining four players without a Second-in-Line debuff. These players will
+                                bait Hello, World.</p>
+                        </span>
+                        <input type="checkbox" name="color_mode" id="omega2_rules" value="1" checked>
+                        <label for="color_mode" data-on="Complex" data-off="Simple" class="btn-color-mode-switch-inner"></label>
+                    </label>
+                    
+                </div>
+                <div class="rule_label">
+                    Omega 2 rules
+                </div>
+<div class="hotkey">
+<p>Press one of the Start buttons to hand out the debuffs and start the timer.</p>
+<p>Mark a player with the hotbar slots on their row: the <strong>Attack</strong> slot <span class="key attack1"></span> gives them the next attack marker, the <strong>Stop</strong> slot <span class="key bind1"></span> gives them the next stop marker. Each slot shows the number it will give next; a highlighted slot means that player already has that marker, and pressing it again removes it.</p>
+<p>Keyboard still works: hover a player and press <strong>1</strong> for attack, <strong>2</strong> for stop, <strong>3</strong> to remove.</p>
+<p>The timer stops when all the correct markers are placed. Hover a rules switch to see who should be marked.</p>
+<p>Debuffs to read:</p><div class="legend"><span class="tile dyn1"></span><span class="tile dyn2"></span><span class="tile dyn3"></span><span class="tile near"></span><span class="tile distant"></span><span class="tile first"></span><span class="tile second"></span><span class="tile mid"></span><span class="tile remote"></span></div>
+<p style="color:var(--muted);font-size:.9rem">Every other buff is random filler to ignore.</p>
+</div></div></div>
+<script>
+"use strict";
+function permuteParty() {
+    let arr = [1, 2, 3, 4, 5, 6, 7, 8];
+    return permute(arr);
+}
+function permuteBuffs() {
+    let arr = ["missionary", "eprog", "holos", "panhaima", "asylum", "brother", "bvoice", "mballad", "mbarrier"];
+    return permute(arr);
+}
+function permute(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+    return arr;
+}
+function clearDebuffs() {
+    let elements = document.querySelectorAll(".debuff");
+    elements.forEach(element => {
+        element.remove();
+    });
+}
+function clearAllMarks() {
+    for (var i = 1; i < 9; i++) {
+        clearMark("party" + i, (_e) => false);
+    }
+}
+function clearMark(p, validate) {
+    for (var i = 0; i < attacks.length; i++) {
+        if (p === attacks[i]) {
+            attacks[i] = "";
+            break;
+        }
+    }
+    for (var i = 0; i < binds.length; i++) {
+        if (p === binds[i]) {
+            binds[i] = "";
+            break;
+        }
+    }
+    const party = document.getElementById(p);
+    const oldMark = party.getElementsByClassName("mark");
+    Array.prototype.forEach.call(oldMark, (om) => om.remove());
+    if (validate != null) {
+        let result = validate.call();
+        if (result) {
+            console.log(end - start + "ms");
+        }
+    }
+}
+function assignSigmaDyn1() {
+    let shuffle = permuteParty();
+    var j = 1;
+    shuffle.forEach(function (i) {
+        if (j < 7) {
+            let p = document.getElementById("party" + i);
+            let newDyn = document.createElement("div");
+            newDyn.classList.add("debuff", "dyn1");
+            if (p != null) {
+                p.appendChild(newDyn);
+            }
+            j++;
+        }
+    });
+}
+function assignSigmaGlitch() {
+    var glitch = ["mid", "remote"][Math.floor(Math.random() * 2)];
+    for (var i = 1; i < 9; i++) {
+        let g = document.createElement("div");
+        g.classList.add("debuff", glitch);
+        let p = document.getElementById("party" + i);
+        if (p != null) {
+            p.appendChild(g);
+        }
+    }
+}
+function assignOmega1Dyn() {
+    let shuffle = permuteParty();
+    var j = 1;
+    shuffle.forEach(function (i) {
+        if (j < 5) {
+            let p = document.getElementById("party" + i);
+            let newDyn = document.createElement("div");
+            newDyn.classList.add("debuff", "dyn1");
+            if (p != null) {
+                p.appendChild(newDyn);
+            }
+        }
+        else {
+            let p = document.getElementById("party" + i);
+            let newDyn = document.createElement("div");
+            newDyn.classList.add("debuff", "dyn2");
+            if (p != null) {
+                p.appendChild(newDyn);
+            }
+        }
+        j++;
+    });
+}
+function assignSigmaHelloWorld() {
+    let shuffle = permuteParty();
+    let hw = ["", "near", "distant"];
+    var j = 1;
+    shuffle.forEach(function (i) {
+        if (j < 3) {
+            let p = document.getElementById("party" + i);
+            let newHw = document.createElement("div");
+            newHw.classList.add("debuff", hw[j]);
+            if (p != null) {
+                p.appendChild(newHw);
+            }
+            j++;
+        }
+    });
+}
+function assignOmega1HelloWorld() {
+    let shuffle = permuteParty();
+    let hw = ["", "near", "near", "distant", "distant"];
+    let il = ["", "first", "second", "first", "second"];
+    var j = 1;
+    shuffle.forEach(function (i) {
+        if (j < 5) {
+            let p = document.getElementById("party" + i);
+            let newIl = document.createElement("div");
+            newIl.classList.add("debuff", il[j]);
+            let newHw = document.createElement("div");
+            newHw.classList.add("debuff", hw[j]);
+            if (p != null) {
+                p.appendChild(newIl);
+                p.appendChild(newHw);
+            }
+            j++;
+        }
+    });
+}
+function assignOmega2Debuffs() {
+    let shuffle = permuteParty();
+    let hw = ["", "", "", "near", "distant"];
+    var j = 1;
+    shuffle.forEach(function (i) {
+        let p = document.getElementById("party" + i);
+        if (j < 3) {
+            let newDyn = document.createElement("div");
+            newDyn.classList.add("debuff", "dyn3");
+            if (p != null) {
+                p.appendChild(newDyn);
+            }
+        }
+        else if (j < 5) {
+            let newDyn = document.createElement("div");
+            let newIl = document.createElement("div");
+            let newHw = document.createElement("div");
+            newDyn.classList.add("debuff", "dyn2");
+            newIl.classList.add("debuff", "second");
+            newHw.classList.add("debuff", hw[j]);
+            if (p != null) {
+                p.appendChild(newDyn);
+                p.appendChild(newIl);
+                p.appendChild(newHw);
+            }
+        }
+        else {
+            let newDyn = document.createElement("div");
+            newDyn.classList.add("debuff", "dyn2");
+            if (p != null) {
+                p.appendChild(newDyn);
+            }
+        }
+        j++;
+    });
+}
+function emptyBuffSlots(p) {
+    let children = p.childNodes;
+    var slotsFilled = 0;
+    children.forEach((node) => {
+        if (node.classList && node.classList.contains("debuff")) {
+            slotsFilled++;
+        }
+    });
+    return 5 - slotsFilled;
+}
+function fillRandomBuffs() {
+    let shuffle = permuteBuffs();
+    for (var i = 1; i < 9; i++) {
+        var isMedicated = false;
+        var buffIndex = 0;
+        let p = document.getElementById("party" + i);
+        let emptySlots = emptyBuffSlots(p);
+        for (var j = 0; j < emptySlots; j++) {
+            let newBuff = document.createElement("div");
+            newBuff.classList.add("debuff");
+            let r = Math.random();
+            if (r < 0.07 && !isMedicated) {
+                newBuff.classList.add("medicated");
+                isMedicated = true;
+            }
+            else if (r < 0.3) {
+                newBuff.classList.add(getRandomClassBuff(p));
+            }
+            else {
+                newBuff.classList.add(shuffle[buffIndex]);
+                buffIndex++;
+            }
+            if (p != null) {
+                p.appendChild(newBuff);
+            }
+        }
+    }
+}
+function getRandomClassBuff(p) {
+    let cls = p.classList[1];
+    var buffs = [];
+    switch (cls) {
+        case "drk": {
+            buffs = ["sprint", "rampart", "living", "tbn", "oblation"];
+            break;
+        }
+        case "gnb": {
+            buffs = ["sprint", "rampart", "bolide", "shell", "nomercy"];
+            break;
+        }
+        case "whm": {
+            buffs = ["sprint", "lucid", "temp", "thin", "presence"];
+            break;
+        }
+        case "sge": {
+            buffs = ["sprint", "lucid", "swift", "eukrasia", "zoe"];
+            break;
+        }
+        case "nin": {
+            buffs = ["sprint", "length", "suiton", "kassatsu", "tcj"];
+            break;
+        }
+        case "mnk": {
+            buffs = ["sprint", "length", "bloodbath", "ridfire", "leaden"];
+            break;
+        }
+        case "brd": {
+            buffs = ["sprint", "length", "blast", "straight", "raging"];
+            break;
+        }
+        case "rdm": {
+            buffs = ["sprint", "accel", "verstone", "verfire", "manafic"];
+            break;
+        }
+    }
+    let existingBuffs = p.getElementsByClassName("debuff");
+    if (existingBuffs.length === 5) {
+        return ""; // We shouldn't ever call this so let's just crash
+    }
+    var candidate = buffs[Math.floor(Math.random() * 5)];
+    while (hasClassName(existingBuffs, candidate)) {
+        candidate = buffs[Math.floor(Math.random() * 5)]; // There's a better way to do this but I cba to do it
+    }
+    return candidate;
+}
+function hasClassName(els, name) {
+    for (var i = 0; i < els.length; i++) {
+        if (els[i].classList.contains(name)) {
+            return true;
+        }
+    }
+    return false;
+}
+function validateSigmaSimple() {
+    for (var i = 1; i < 4; i++) {
+        if (attacks[i] === "") {
+            return false;
+        }
+        let p = document.getElementById(attacks[i]);
+        if (p == null) {
+            return false;
+        }
+        let debuffs = p.getElementsByClassName("debuff");
+        for (var j = 0; j < debuffs.length; j++) {
+            if (debuffs[j].classList.contains("near") || debuffs[j].classList.contains("distant")) {
+                return false;
+            }
+        }
+    }
+    validationFunction = null;
+    end = Date.now();
+    let r = document.getElementById("results");
+    if (r != null) {
+        r.textContent = ((end - start) / 1000) + "s";
+    }
+    return true;
+}
+function validateSigmaComplex() {
+    for (var i = 1; i < 5; i++) {
+        if (attacks[i] === "") {
+            return false;
+        }
+        let p = document.getElementById(attacks[i]);
+        if (p == null) {
+            return false;
+        }
+        let debuffs = p.getElementsByClassName("debuff");
+        for (var j = 0; j < debuffs.length; j++) {
+            if (debuffs[j].classList.contains("near") || debuffs[j].classList.contains("distant")) {
+                return false;
+            }
+        }
+    }
+    for (var i = 1; i < 3; i++) {
+        if (binds[i] === "") {
+            return false;
+        }
+        let p = document.getElementById(binds[i]);
+        if (p == null) {
+            return false;
+        }
+        let debuffs = p.getElementsByClassName("debuff");
+        var foundDyn = false;
+        for (var j = 0; j < debuffs.length; j++) {
+            if (debuffs[j].classList.contains("near") || debuffs[j].classList.contains("distant")) {
+                return false;
+            }
+            if (debuffs[j].classList.contains("dyn1")) {
+                foundDyn = true;
+            }
+        }
+        if (!foundDyn) {
+            return false;
+        }
+    }
+    validationFunction = null;
+    end = Date.now();
+    let r = document.getElementById("results");
+    if (r != null) {
+        r.textContent = ((end - start) / 1000) + "s";
+    }
+    return true;
+}
+function validateOmega1Simple() {
+    var dyn2seconds = [];
+    for (var i = 1; i < 9; i++) {
+        let p = document.getElementById("party" + i);
+        if (p == null) {
+            return false;
+        }
+        let debuffs = p.getElementsByClassName("debuff");
+        var second = false;
+        var dyn2 = false;
+        for (var j = 0; j < debuffs.length; j++) {
+            if (debuffs[j].classList.contains("second")) {
+                second = true;
+            }
+            if (debuffs[j].classList.contains("dyn2")) {
+                dyn2 = true;
+            }
+        }
+        if (second && dyn2) {
+            dyn2seconds.push("party" + i);
+        }
+    }
+    for (var i = 0; i < dyn2seconds.length; i++) {
+        let p = document.getElementById(dyn2seconds[i]);
+        if (p == null) {
+            return false;
+        }
+        let marks = p.getElementsByClassName("mark");
+        if (!marks || marks.length == 0) {
+            return false;
+        }
+        for (var j = 0; j < marks.length; j++) {
+            if (!marks[j].classList.contains("bind1") && !marks[j].classList.contains("bind2")) {
+                return false;
+            }
+        }
+    }
+    for (var i = 1; i < 3; i++) {
+        if (attacks[i] === "") {
+            return false;
+        }
+        let p = document.getElementById(attacks[i]);
+        if (p == null) {
+            return false;
+        }
+        let debuffs = p.getElementsByClassName("debuff");
+        for (var j = 0; j < debuffs.length; j++) {
+            if (debuffs[j].classList.contains("first")) {
+                return false;
+            }
+        }
+    }
+    for (var i = 1; i < 3; i++) {
+        if (binds[i] === "") {
+            return false;
+        }
+        let p = document.getElementById(binds[i]);
+        if (p == null) {
+            return false;
+        }
+        let debuffs = p.getElementsByClassName("debuff");
+        var foundDyn = false;
+        for (var j = 0; j < debuffs.length; j++) {
+            if (debuffs[j].classList.contains("first")) {
+                return false;
+            }
+            if (debuffs[j].classList.contains("dyn2")) {
+                foundDyn = true;
+            }
+        }
+        if (!foundDyn) {
+            return false;
+        }
+    }
+    validationFunction = null;
+    end = Date.now();
+    let r = document.getElementById("results");
+    if (r != null) {
+        r.textContent = ((end - start) / 1000) + "s";
+    }
+    return true;
+}
+function validateOmega1Complex() {
+    for (var i = 1; i < 5; i++) {
+        if (attacks[i] === "") {
+            return false;
+        }
+        let p = document.getElementById(attacks[i]);
+        if (p == null) {
+            return false;
+        }
+        let debuffs = p.getElementsByClassName("debuff");
+        var second = false;
+        var dyn2 = false;
+        for (var j = 0; j < debuffs.length; j++) {
+            if (debuffs[j].classList.contains("first")) {
+                return false;
+            }
+            if (debuffs[j].classList.contains("second")) {
+                second = true;
+            }
+            if (debuffs[j].classList.contains("dyn2")) {
+                dyn2 = true;
+            }
+        }
+        if (second && dyn2) {
+            return false;
+        }
+    }
+    for (var i = 1; i < 3; i++) {
+        if (binds[i] === "") {
+            return false;
+        }
+        let p = document.getElementById(binds[i]);
+        if (p == null) {
+            return false;
+        }
+        let debuffs = p.getElementsByClassName("debuff");
+        var foundDyn = false;
+        for (var j = 0; j < debuffs.length; j++) {
+            if (debuffs[j].classList.contains("first")) {
+                return false;
+            }
+            if (debuffs[j].classList.contains("dyn1")) {
+                return false;
+            }
+            if (debuffs[j].classList.contains("dyn2")) {
+                foundDyn = true;
+            }
+        }
+        if (!foundDyn) {
+            return false;
+        }
+    }
+    validationFunction = null;
+    end = Date.now();
+    let r = document.getElementById("results");
+    if (r != null) {
+        r.textContent = ((end - start) / 1000) + "s";
+    }
+    return true;
+}
+function validateOmega2Simple() {
+    for (var i = 1; i < 3; i++) {
+        if (attacks[i] === "") {
+            return false;
+        }
+        let p = document.getElementById(attacks[i]);
+        if (p == null) {
+            return false;
+        }
+        let debuffs = p.getElementsByClassName("debuff");
+        for (var j = 0; j < debuffs.length; j++) {
+            if (debuffs[j].classList.contains("second") || debuffs[j].classList.contains("dyn3")) {
+                return false;
+            }
+        }
+    }
+    for (var i = 1; i < 3; i++) {
+        if (binds[i] === "") {
+            return false;
+        }
+        let p = document.getElementById(binds[i]);
+        if (p == null) {
+            return false;
+        }
+        let debuffs = p.getElementsByClassName("debuff");
+        var foundDyn = false;
+        for (var j = 0; j < debuffs.length; j++) {
+            if (debuffs[j].classList.contains("second")) {
+                return false;
+            }
+            if (debuffs[j].classList.contains("dyn3")) {
+                foundDyn = true;
+            }
+        }
+        if (!foundDyn) {
+            return false;
+        }
+    }
+    validationFunction = null;
+    end = Date.now();
+    let r = document.getElementById("results");
+    if (r != null) {
+        r.textContent = ((end - start) / 1000) + "s";
+    }
+    return true;
+}
+function validateOmega2Complex() {
+    for (var i = 1; i < 5; i++) {
+        if (attacks[i] === "") {
+            return false;
+        }
+        let p = document.getElementById(attacks[i]);
+        if (p == null) {
+            return false;
+        }
+        let debuffs = p.getElementsByClassName("debuff");
+        for (var j = 0; j < debuffs.length; j++) {
+            if (debuffs[j].classList.contains("second")) {
+                return false;
+            }
+        }
+    }
+    for (var i = 1; i < 3; i++) {
+        if (binds[i] === "") {
+            return false;
+        }
+        let p = document.getElementById(binds[i]);
+        if (p == null) {
+            return false;
+        }
+        let debuffs = p.getElementsByClassName("debuff");
+        var foundDyn = false;
+        for (var j = 0; j < debuffs.length; j++) {
+            if (debuffs[j].classList.contains("second")) {
+                return false;
+            }
+            if (debuffs[j].classList.contains("dyn3")) {
+                foundDyn = true;
+            }
+        }
+        if (!foundDyn) {
+            return false;
+        }
+    }
+    validationFunction = null;
+    end = Date.now();
+    let r = document.getElementById("results");
+    if (r != null) {
+        r.textContent = ((end - start) / 1000) + "s";
+    }
+    return true;
+}
+function markNextAttack(p, validate) {
+    for (var i = 1; i < attacks.length; i++) {
+        if (attacks[i] === "") {
+            clearMark(p, (_e) => false);
+            attacks[i] = p;
+            let newMark = document.createElement("div");
+            newMark.classList.add("mark", "attack" + i);
+            let icons = document.getElementById(p).getElementsByClassName("icon_container");
+            Array.prototype.forEach.call(icons, (icon) => icon.appendChild(newMark));
+            if (validate != null) {
+                let result = validate.call();
+                if (result) {
+                    console.log(end - start + "ms");
+                }
+            }
+            return;
+        }
+    }
+}
+function markNextBind(p, validate) {
+    for (var i = 1; i < binds.length; i++) {
+        if (binds[i] === "") {
+            clearMark(p, (_e) => false);
+            binds[i] = p;
+            let newMark = document.createElement("div");
+            newMark.classList.add("mark", "bind" + i);
+            let icons = document.getElementById(p).getElementsByClassName("icon_container");
+            Array.prototype.forEach.call(icons, (icon) => icon.appendChild(newMark));
+            if (validate != null) {
+                let result = validate.call();
+                if (result) {
+                    console.log(end - start + "ms");
+                }
+            }
+            return;
+        }
+    }
+}
+var moParty = 1;
+var attacks = ["", "", "", "", "", ""];
+var binds = ["", "", "", ""];
+var validationFunction, start, end;
+for (var i = 1; i < 9; i++) {
+    let j = i;
+    document.getElementById("party" + j).addEventListener("mouseover", (event) => { moParty = j; });
+}
+window.addEventListener("keydown", (event) => {
+    if (event.code === "Digit1") {
+        markNextAttack("party" + moParty, validationFunction);
+    }
+    else if (event.code === "Digit2") {
+        markNextBind("party" + moParty, validationFunction);
+    }
+    else if (event.code === "Digit3") {
+        clearMark("party" + moParty, validationFunction);
+    }
+});
+const sigButton = document.querySelector("#sigma");
+sigButton.addEventListener("click", (event) => {
+    validationFunction = document.querySelector("#sigma_rules").checked ?
+        validateSigmaComplex : validateSigmaSimple;
+    start = Date.now();
+    let r = document.getElementById("results");
+    if (r != null) {
+        r.textContent = "-.---s";
+    }
+    clearAllMarks();
+    clearDebuffs();
+    assignSigmaDyn1();
+    assignSigmaHelloWorld();
+    assignSigmaGlitch();
+    fillRandomBuffs();
+});
+const om1Button = document.querySelector("#omega1");
+om1Button.addEventListener("click", (event) => {
+    validationFunction = document.querySelector("#omega1_rules").checked ?
+        validateOmega1Complex : validateOmega1Simple;
+    start = Date.now();
+    let r = document.getElementById("results");
+    if (r != null) {
+        r.textContent = "-.---s";
+    }
+    clearAllMarks();
+    clearDebuffs();
+    assignOmega1Dyn();
+    assignOmega1HelloWorld();
+    fillRandomBuffs();
+});
+const om2Button = document.querySelector("#omega2");
+om2Button.addEventListener("click", (event) => {
+    validationFunction = document.querySelector("#omega2_rules").checked ?
+        validateOmega2Complex : validateOmega2Simple;
+    start = Date.now();
+    let r = document.getElementById("results");
+    if (r != null) {
+        r.textContent = "-.---s";
+    }
+    clearAllMarks();
+    clearDebuffs();
+    assignOmega2Debuffs();
+    fillRandomBuffs();
+});
+
+/* ---- Row-aligned hotbars ---- */
+function holds(list,p){return list.indexOf(p)>0;}
+function nextFree(list){for(var i=1;i<list.length;i++){if(list[i]==="")return i;}return 0;}
+function refreshHotbars(){
+  var na=nextFree(attacks), nb=nextFree(binds);
+  document.querySelectorAll(".slot").forEach(function(s){
+    var p="party"+s.dataset.p, isA=s.classList.contains("atk"), list=isA?attacks:binds;
+    var g=s.querySelector(".glyph"), has=holds(list,p), n=has?list.indexOf(p):(isA?na:nb);
+    g.className="glyph "+(isA?"attack":"bind")+(n||(isA?5:3));
+    s.classList.toggle("has",has); s.classList.toggle("empty",!has&&!n);
+  });
+}
+document.querySelectorAll(".slot").forEach(function(s){
+  s.addEventListener("click",function(){
+    var p="party"+s.dataset.p, isA=s.classList.contains("atk");
+    if(holds(isA?attacks:binds,p)){clearMark(p,validationFunction);}
+    else if(isA){markNextAttack(p,validationFunction);}else{markNextBind(p,validationFunction);}
+    refreshHotbars();
+  });
+});
+window.addEventListener("keyup",refreshHotbars);
+document.querySelectorAll(".controls .button").forEach(function(b){b.addEventListener("click",refreshHotbars);});
+refreshHotbars();
+/* Use the real game icons from XIVAPI when they can load; otherwise keep the built-in drawn icons. */
+(function(){var t=new Image();t.onload=function(){document.documentElement.classList.add('remote');};t.src='https://xivapi.com/i/061000/061201_hr1.png';})();
+</script></body></html>
