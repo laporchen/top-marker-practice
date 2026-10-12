@@ -398,7 +398,7 @@ button:focus-visible{outline:3px solid var(--slot-hi);outline-offset:2px}
                 </div>
 <div class="hotkey">
 <p>Press one of the Start buttons to hand out the debuffs and start the timer.</p>
-<p>Mark a player with the hotbar slots on their row: the <strong>Attack</strong> slot <span class="key attack1"></span> gives them the next attack marker, the <strong>Stop</strong> slot <span class="key bind1"></span> gives them the next stop marker. Each slot shows the number it will give next; a highlighted slot means that player already has that marker, and pressing it again removes it.</p>
+<p>Mark a player with the hotbar slots on their row: the <strong>Attack</strong> slot <span class="key attack1"></span> gives them the next attack marker, the <strong>Stop</strong> slot <span class="key bind1"></span> gives them the next stop marker. A highlighted slot means that player already has that marker, and pressing it again removes it.</p>
 <p>Keyboard still works: hover a player and press <strong>1</strong> for attack, <strong>2</strong> for stop, <strong>3</strong> to remove.</p>
 <p>The timer stops when all the correct markers are placed. Hover a rules switch to see who should be marked.</p>
 <p>Debuffs to read:</p><div class="legend"><span class="tile dyn1"></span><span class="tile dyn2"></span><span class="tile dyn3"></span><span class="tile near"></span><span class="tile distant"></span><span class="tile first"></span><span class="tile second"></span><span class="tile mid"></span><span class="tile remote"></span></div>
@@ -1085,8 +1085,7 @@ function refreshHotbars(){
   var na=nextFree(attacks), nb=nextFree(binds);
   document.querySelectorAll(".slot").forEach(function(s){
     var p="party"+s.dataset.p, isA=s.classList.contains("atk"), list=isA?attacks:binds;
-    var g=s.querySelector(".glyph"), has=holds(list,p), n=has?list.indexOf(p):(isA?na:nb);
-    g.className="glyph "+(isA?"attack":"bind")+(n||(isA?5:3));
+    var has=holds(list,p), n=isA?na:nb;
     s.classList.toggle("has",has); s.classList.toggle("empty",!has&&!n);
   });
 }
@@ -1101,6 +1100,30 @@ document.querySelectorAll(".slot").forEach(function(s){
 window.addEventListener("keyup",refreshHotbars);
 document.querySelectorAll(".controls .button").forEach(function(b){b.addEventListener("click",refreshHotbars);});
 refreshHotbars();
-/* Use the real game icons from XIVAPI when they can load; otherwise keep the built-in drawn icons. */
-(function(){var t=new Image();t.onload=function(){document.documentElement.classList.add('remote');};t.src='https://xivapi.com/i/061000/061201_hr1.png';})();
+/* Use the real game icons from XIVAPI when they can load; otherwise keep the built-in drawn icons.
+   Every remote icon is fetched and decoded up front so nothing pops in mid-practice. */
+(function(){
+  var t=new Image();
+  t.onload=function(){
+    var urls=new Set();
+    Array.prototype.forEach.call(document.styleSheets,function(s){
+      var rules;try{rules=s.cssRules;}catch(e){return;}
+      Array.prototype.forEach.call(rules,function(r){
+        var m,re=/url\("?(https?:[^")]+)"?\)/g;
+        while((m=re.exec(r.cssText))){urls.add(m[1]);}
+      });
+    });
+    document.querySelectorAll("img[src^='http']").forEach(function(i){urls.add(i.src);});
+    window.preloadedIcons=[];
+    var loads=Array.from(urls).map(function(u){
+      var img=new Image();window.preloadedIcons.push(img);img.src=u;
+      return img.decode().catch(function(){});
+    });
+    var done=false;
+    function enable(){if(!done){done=true;document.documentElement.classList.add('remote');}}
+    Promise.all(loads).then(enable);
+    setTimeout(enable,10000);
+  };
+  t.src='https://xivapi.com/i/061000/061201_hr1.png';
+})();
 </script></body></html>
